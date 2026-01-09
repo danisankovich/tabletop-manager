@@ -1,0 +1,34 @@
+{
+    "name": "default",
+    "battle_mat_source": null,
+    "assets": [
+        {
+            "name": "goblin",
+            "id": 1,
+            "type": "creature",
+            "subtype": "hostile",
+            "path": "goblin.jpg",
+            "size": "medium",
+            "startingXCell": 1,
+            "startingYCell": 1
+        }, {
+            "name": "goblin",
+            "id": 2,
+            "type": "creature",
+            "subtype": "hostile",
+            "path": "goblin.jpg",
+            "size": "medium",
+            "startingXCell": 2,
+            "startingYCell": 4
+        }, {
+            "name": "goblin",
+            "id": 3,
+            "type": "creature",
+            "subtype": "hostile",
+            "path": "goblin.jpg",
+            "size": "large",
+            "startingXCell": 5,
+            "startingYCell": 5
+        }
+    ]
+}
