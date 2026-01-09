@@ -81,18 +81,29 @@ function addAssetToScreen(asset: IBattleMapAsset, battleMapName: string) {
 
 // addAssetToScreen('goblin.jpg', 3, 2);
 
-function placeAssets(assets: IBattleMapAsset[], battleMapName: string) {
-    assets.forEach((asset: IBattleMapAsset) => {
+function placeAssets(battleMap: IBattleMap, battleMapName: string) {
+    if (battleMap.battle_map_source) {
+        console.log('here?')
+        const GRID: HTMLElement | null = document.getElementById('grid');
+        if (GRID) {
+            const backgroundSource = `./battle_maps/${battleMapName}/assets/${battleMap.battle_map_source}`;
+            GRID.style.backgroundImage = `url('${backgroundSource}')`;
+            GRID.style.backgroundRepeat = 'no-repeat';
+            GRID.style.backgroundSize = 'cover';
+        }
+    }
+
+    battleMap.assets.forEach((asset: IBattleMapAsset) => {
         addAssetToScreen(asset, battleMapName);
     })
 }
 
 async function initializeMap(name: string) {
     const battleMap = await fetchBattleMap(name);
-    placeAssets(battleMap.assets, name)
+    placeAssets(battleMap, name)
 }
 
-initializeMap('default').then(data=> {
+initializeMap('field').then(data=> {
     console.log('initialized');
 })
 
