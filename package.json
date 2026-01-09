@@ -5,7 +5,6 @@
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "main": "server.js",
   "scripts": {
     "start": "webpack serve --open",
     "build": "webpack"

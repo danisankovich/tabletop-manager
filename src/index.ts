@@ -1,3 +1,5 @@
+import type { IBattleMapAsset, IBattleMap } from './types.ts';
+
 function generateColumns(): void {
     const widthInch: number = screen.width / 96;
     const heightInch: number = screen.height / 96;
@@ -18,7 +20,7 @@ function generateColumns(): void {
 
 generateColumns();
 
-async function fetchBattleMat(name: string) {
+async function fetchBattleMat(name: string): Promise<IBattleMap> {
     try {
         const response = await fetch(`./battle_mats/${name}/settings.json`, { mode: 'no-cors'});
         const data = await response.json();
@@ -28,19 +30,7 @@ async function fetchBattleMat(name: string) {
     }
 }
 
-function addAssetToScreen(asset: any, battleMatName: string) {
-
-    // {
-    //         "name": "goblin",
-    //         "id": 1,
-    //         "type": "creature",
-    //         "subtype": "hostile",
-    //         "path": "goblin.jpg",
-    //         "size": "medium",
-    //         "startingXCell": 0,
-    //         "startingYCell": 0
-    //     }
-
+function addAssetToScreen(asset: IBattleMapAsset, battleMatName: string) {
     const { name, id, type, subtype, path, size, startingXCell, startingYCell } = asset;
     const GRID: HTMLElement | null = document.getElementById('grid');
     
@@ -77,8 +67,8 @@ function addAssetToScreen(asset: any, battleMatName: string) {
 
 // addAssetToScreen('goblin.jpg', 3, 2);
 
-function placeAssets(assets: any, battleMatName: string) {
-    assets.forEach((asset: any) => {
+function placeAssets(assets: IBattleMapAsset[], battleMatName: string) {
+    assets.forEach((asset: IBattleMapAsset) => {
         addAssetToScreen(asset, battleMatName);
     })
 }
@@ -89,14 +79,13 @@ async function initializeMap(name: string) {
 }
 
 initializeMap('default').then(data=> {
-    console.log(data);
+    console.log('initialized');
 })
 
 function dragstartHandler(event: any) {
     const rect = event.target.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const offsetY = event.clientY - rect.top;
-    console.log(offsetX, offsetY);
     event.dataTransfer.setData("text/plain", `${event.target.id},${offsetX},${offsetY}`);    
 }
 
