@@ -1,6 +1,6 @@
 {
     "name": "default",
-    "battle_mat_source": null,
+    "battle_map_source": null,
     "assets": [
         {
             "name": "goblin",
@@ -10,7 +10,8 @@
             "path": "goblin.jpg",
             "size": "medium",
             "startingXCell": 1,
-            "startingYCell": 1
+            "startingYCell": 1,
+            "isDraggable": true
         }, {
             "name": "goblin",
             "id": 2,
@@ -19,7 +20,8 @@
             "path": "goblin.jpg",
             "size": "medium",
             "startingXCell": 2,
-            "startingYCell": 4
+            "startingYCell": 4,
+            "isDraggable": false
         }, {
             "name": "goblin",
             "id": 3,
@@ -28,7 +30,8 @@
             "path": "goblin.jpg",
             "size": "large",
             "startingXCell": 5,
-            "startingYCell": 5
+            "startingYCell": 5,
+            "isDraggable": true
         }
     ]
 }

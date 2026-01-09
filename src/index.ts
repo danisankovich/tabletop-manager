@@ -4,6 +4,7 @@ function generateColumns(): void {
     const widthInch: number = screen.width / 96;
     const heightInch: number = screen.height / 96;
     const GRID: HTMLElement | null = document.getElementById('grid');
+
     if (GRID) {
         for (let counterHeight = 0; counterHeight < heightInch; counterHeight++) {
             const ROW = document.createElement('div');
@@ -20,9 +21,9 @@ function generateColumns(): void {
 
 generateColumns();
 
-async function fetchBattleMat(name: string): Promise<IBattleMap> {
+async function fetchBattleMap(name: string): Promise<IBattleMap> {
     try {
-        const response = await fetch(`./battle_mats/${name}/settings.json`, { mode: 'no-cors'});
+        const response = await fetch(`./battle_maps/${name}/settings.json`, { mode: 'no-cors'});
         const data = await response.json();
         return data;
     } catch (err: any) {
@@ -30,18 +31,23 @@ async function fetchBattleMat(name: string): Promise<IBattleMap> {
     }
 }
 
-function addAssetToScreen(asset: IBattleMapAsset, battleMatName: string) {
-    const { name, id, type, subtype, path, size, startingXCell, startingYCell } = asset;
+function addAssetToScreen(asset: IBattleMapAsset, battleMapName: string) {
+    const { name, id, type, subtype, path, size, startingXCell, startingYCell, isDraggable } = asset;
     const GRID: HTMLElement | null = document.getElementById('grid');
+    const DRAGGABLE_GRID: HTMLElement | null = document.getElementById('draggable-grid');
     
-    if (GRID) {
+    if (GRID && DRAGGABLE_GRID) {
         const IMG_CONTAINER = document.createElement('div');
         const IMG = document.createElement('img');
         
-        IMG.src = `./battle_mats/${battleMatName}/assets/${path}`;
-        IMG.classList.add('asset', type);
+        IMG.src = `./battle_maps/${battleMapName}/assets/${path}`;
+        IMG_CONTAINER.classList.add('asset', type);
         if (subtype) {
-            IMG.classList.add(subtype);
+            IMG_CONTAINER.classList.add(subtype);
+        }
+
+        if (subtype === 'hostile') {
+            IMG_CONTAINER.classList.add('hostile');
         }
 
         if (['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan'].includes(size)) {
@@ -52,30 +58,38 @@ function addAssetToScreen(asset: IBattleMapAsset, battleMatName: string) {
         }
 
         if (startingXCell) {
-            IMG.style.left = `${((startingXCell - 1) * 96) + 1}px`;
+            IMG_CONTAINER.style.left = `${((startingXCell - 1) * 96) + 1}px`;
         }
 
         if (startingYCell) {
-            IMG.style.top = `${((startingYCell - 1) * 96) + 12}px`;
+            IMG_CONTAINER.style.top = `${((startingYCell - 1) * 96) + 12}px`;
         }
-        IMG.draggable = true;
-        IMG.ondragstart = dragstartHandler;
-        IMG.id = `${name}-${id}`; // give unique IDs in the JSON when generating these for targeting reasons.
-        GRID.appendChild(IMG);
+        IMG_CONTAINER.draggable = isDraggable;
+        IMG.draggable = false;
+        IMG_CONTAINER.ondragover = dragOverHandler;
+        IMG_CONTAINER.classList.add(IMG_CONTAINER.draggable ? 'is-draggable' : 'non-draggable');
+        IMG_CONTAINER.ondragstart = dragstartHandler;
+        IMG_CONTAINER.id = `${name}-${id}`; // give unique IDs in the JSON when generating these for targeting reasons.
+        IMG_CONTAINER.appendChild(IMG);
+        if (IMG.draggable) {
+            DRAGGABLE_GRID.appendChild(IMG_CONTAINER);
+        } else {
+            GRID.appendChild(IMG_CONTAINER);
+        }
     }
 }
 
 // addAssetToScreen('goblin.jpg', 3, 2);
 
-function placeAssets(assets: IBattleMapAsset[], battleMatName: string) {
+function placeAssets(assets: IBattleMapAsset[], battleMapName: string) {
     assets.forEach((asset: IBattleMapAsset) => {
-        addAssetToScreen(asset, battleMatName);
+        addAssetToScreen(asset, battleMapName);
     })
 }
 
 async function initializeMap(name: string) {
-    const battleMat = await fetchBattleMat(name);
-    placeAssets(battleMat.assets, name)
+    const battleMap = await fetchBattleMap(name);
+    placeAssets(battleMap.assets, name)
 }
 
 initializeMap('default').then(data=> {
@@ -86,11 +100,13 @@ function dragstartHandler(event: any) {
     const rect = event.target.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const offsetY = event.clientY - rect.top;
-    event.dataTransfer.setData("text/plain", `${event.target.id},${offsetX},${offsetY}`);    
+    event.dataTransfer.setData("text/plain", `${event.target.id},${offsetX},${offsetY}`);
+    event.dataTransfer.effectAllowed = "move";   
 }
 
-function dragOverHandler(event: Event) {
-      event.preventDefault();
+function dragOverHandler(event: any) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
 }
 
 // function snapToPosition(value) {
@@ -103,6 +119,7 @@ function dragOverHandler(event: Event) {
 
 function dropHandler(event: any) {
     event.preventDefault();
+    const DRAGGABLE_GRID: HTMLElement | null = document.getElementById('draggable-grid');
 
     const data = event.dataTransfer.getData("text/plain").split(',');
     const id = data[0];
@@ -113,19 +130,14 @@ function dropHandler(event: any) {
     if (drop_item) {
         drop_item.style.left = `${event.clientX - dropOffsetX + window.scrollX}px`;
         drop_item.style.top = `${event.clientY - dropOffsetY + window.scrollY}px`;
+        console.log(drop_item)
+        DRAGGABLE_GRID?.appendChild(drop_item);
     }
+
 }
 
 
 // TODO
-// run app via node, so that it can react to terminal commands
-// add tokens to screen via terminal command --> maybe with sockets
-// maybe electron app?
-
-// alternatively, just have assets to load up, and depending on the assets, you tell it
-// what to add to screen and where to begin. So like, each battlemap has an image (the grid)
-// and a json, which includes enemy types, enemy numbers, and coordinates. 
-// This can also be used for assets like trees and such, for when you don't
 // have stylized backgrounds. You just have a piece of UI at the top with
 // a dropdown to load the desired assets.
 // or maybe you open the dropdown with a keypress.

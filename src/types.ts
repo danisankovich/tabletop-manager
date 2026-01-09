@@ -1,6 +1,6 @@
 export interface IBattleMap {
     name: string;
-    battle_mat_source?: string;
+    battle_map_source?: string;
     assets: IBattleMapAsset[];
 }
 
@@ -13,4 +13,5 @@ export interface IBattleMapAsset {
     size: string;
     startingXCell: number;
     startingYCell: number;
+    isDraggable: boolean;
 }

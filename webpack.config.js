@@ -53,8 +53,8 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'src/battle_mats', // Source glob pattern
-          to: 'battle_mats',         // Destination in the dist folder (e.g., dist/json/data.json)
+          from: 'src/battle_maps', // Source glob pattern
+          to: 'battle_maps',         // Destination in the dist folder (e.g., dist/json/data.json)
         }, {
           from: 'src/styles', // Source glob pattern
           to: 'styles',         // Destination in the dist folder (e.g., dist/json/data.json)

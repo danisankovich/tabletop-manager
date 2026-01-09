@@ -1,5 +1,10 @@
 #grid {
-    margin: 0;
+display: grid;
+    grid-template-columns: 1fr;
+}
+
+#draggable-grid {
+    
 }
 
 .cell-row {
@@ -17,26 +22,27 @@
 }
 
 .image-container {
-    width: 96px;
-    height: 96px;
+    width: 92px;
+    height: 92px;
     padding: 2px;
 }
 
 .image-container-medium {
-    width: 96px;
-    height: 96px;
+    width: 92px;
+    height: 92px;
     padding: 2px;
 }
 
 .image-container-large {
-    width: 192px;
-    height: 192px;
+    width: 188px;
+    height: 188px;
     padding: 2px;
 }
 
 
 .asset {
     position: absolute;
+
 }
 
 .medium {
@@ -47,4 +53,16 @@
 .large {
     width: 188px;
     height: 188px;
+}
+
+.hostile {
+    background-color: red;
+}
+
+.non-draggable {
+    
+}
+
+.is-draggable {
+    z-index: 1000;
 }
