@@ -79,8 +79,6 @@ function addAssetToScreen(asset: IBattleMapAsset, battleMapName: string) {
     }
 }
 
-// addAssetToScreen('goblin.jpg', 3, 2);
-
 function placeAssets(battleMap: IBattleMap, battleMapName: string) {
     if (battleMap.battle_map_source) {
         console.log('here?')
@@ -149,6 +147,6 @@ function dropHandler(event: any) {
 
 
 // TODO
-// have stylized backgrounds. You just have a piece of UI at the top with
-// a dropdown to load the desired assets.
-// or maybe you open the dropdown with a keypress.
+// a dropdown to load the desired battlemaps. maybe opened with a keypress combo.
+// a dropdown to add assets listed in a battlemap folder. For example, if a tree or dragon
+// needs to be added mid-fight, there should be a means to do this.
