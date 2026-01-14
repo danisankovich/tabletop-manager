@@ -27,6 +27,10 @@
 
 .asset {
     position: absolute;
+    opacity: 90%;
+    &:hover {
+        opacity: 100%;
+    }
 }
 
 .token-image {
@@ -39,22 +43,23 @@
 }
 
 .non-draggable {
-    
+    cursor: pointer;
 }
 
 .is-draggable {
     z-index: 100;
     cursor: grab;
-    opacity: 80%;
-    &:hover {
-        opacity: 100%;
-    }
 }
 
 #token-menu {
-    width: 168px;
-    height: 200px;
+    width: 120px;
+    height: 180px;
     border: 1px solid red;
     position: absolute;
     z-index: 1000;
+    display: none;
+}
+
+#menu-remove-btn {
+    width: inherit;
 }

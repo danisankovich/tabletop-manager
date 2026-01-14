@@ -6,10 +6,9 @@ let CLICKED_TOKEN: HTMLElement | null;
 let SHOW_MENU: boolean = false;
 
 function generateColumns(): void {
-    const widthInch: number = screen.width / 96;
-    const heightInch: number = screen.height / 96;
+    const widthInch: number = Math.floor(window.innerWidth / 96);
+    const heightInch: number = Math.floor(window.innerHeight / 96);
     const GRID: HTMLElement | null = document.getElementById('grid');
-
     if (GRID) {
         for (let counterHeight = 0; counterHeight < heightInch; counterHeight++) {
             const ROW = document.createElement('div');
@@ -24,15 +23,6 @@ function generateColumns(): void {
     }
 
     const DRAGGABLE_GRID: HTMLElement | null = document.getElementById('draggable-grid');
-    if (DRAGGABLE_GRID) {
-        DRAGGABLE_GRID.addEventListener('offclic', function() {
-            // console.log('ahhh')
-            // CLICKED_TOKEN = null;
-            // SHOW_MENU = false;
-            // closeMenu();
-            // currently doesn't work and breaks opening the menu
-        })
-    }
 }
 
 generateColumns();
@@ -109,7 +99,7 @@ function addAssetToScreen(asset: IBattleMapAsset, battleMapName: string) {
         IMG.classList.add('token-image');
 
         if (startingXCell) {
-            IMG_CONTAINER.style.left = `${((startingXCell - 1) * 96) + 1}px`;
+            IMG_CONTAINER.style.left = `${((startingXCell - 1) * 96) + 11}px`;
         }
 
         if (startingYCell) {
@@ -209,33 +199,44 @@ function addEventListenersToAsset(asset: IBattleMapAsset) {
     }
 }
 
+function offClickHandler(event: MouseEvent) {
+// @ts-ignore
+    if (event && event.target && event.target.id !== 'menu-remove-btn' && event.target.id !== 'token-menu' && SHOW_MENU) {
+        closeMenu();
+    }
+}
+
 function openMenu(event: MouseEvent, ID: string) {
-    const DRAGGABLE_GRID = document.getElementById('draggable-grid');
     const { clientX, clientY } = event;
+    document.removeEventListener('mouseup', offClickHandler);
 
     closeMenu();
 
+    const menu = document.getElementById('token-menu');
+    if (menu) {
+        menu.style.display = 'block';
+        menu.style.left = clientX + 160 > window.innerWidth ? `${clientX - 160}px` : `${clientX}px`;
+        menu.style.top = clientY + 200 > window.innerHeight ? `${clientY - 200}px` : `${clientY}px`;
+
+        const removeButton = document.getElementById('menu-remove-btn');
+        if (removeButton) {
+            removeButton.onclick = removeToken;
+        }
+    }
+    setTimeout(() => {
+        document.addEventListener('mouseup', offClickHandler, { once: true });
+    }, 0);
+
     SHOW_MENU = true;
-    const menu = document.createElement('div');
-    menu.id = 'token-menu';
-
-    menu.style.left = clientX + 168 > screen.width ? `${clientX - 168}px` : `${clientX}px`;
-    menu.style.top = clientY + 200 > screen.width ? `${clientY - 200}px` : `${clientY}px`;
-
-    const removeButton = document.createElement('button');
-    removeButton.onclick = removeToken;
-
-    menu.appendChild(removeButton);
-    DRAGGABLE_GRID?.appendChild(menu);
 }
 
 function closeMenu() {
-    const DRAGGABLE_GRID = document.getElementById('draggable-grid');
     SHOW_MENU = false;
-    const menuToRemove = document.getElementById('token-menu');
-    if (menuToRemove) {
-        DRAGGABLE_GRID?.removeChild(menuToRemove);
+    const menu = document.getElementById('token-menu');
+    if (menu) {
+        menu.style.display = 'none';
     }
+   
 }
 
 function removeToken() {
@@ -243,7 +244,10 @@ function removeToken() {
     if (CLICKED_TOKEN) {
         GRID?.removeChild(CLICKED_TOKEN);
     }
+    closeMenu();
 }
+
+
 
 function setCondition() {
     // for all of these, you should build a template. instead of building the menu by scratch every time
