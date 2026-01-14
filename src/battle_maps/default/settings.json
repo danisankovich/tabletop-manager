@@ -18,7 +18,7 @@
             "type": "creature",
             "subtype": "hostile",
             "path": "goblin.jpg",
-            "size": "medium",
+            "size": "1x2",
             "startingXCell": 2,
             "startingYCell": 4,
             "isDraggable": false

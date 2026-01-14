@@ -1,5 +1,5 @@
 #grid {
-display: grid;
+    display: grid;
     grid-template-columns: 1fr;
 }
 
@@ -22,37 +22,16 @@ display: grid;
 }
 
 .image-container {
-    width: 92px;
-    height: 92px;
     padding: 2px;
 }
-
-.image-container-medium {
-    width: 92px;
-    height: 92px;
-    padding: 2px;
-}
-
-.image-container-large {
-    width: 188px;
-    height: 188px;
-    padding: 2px;
-}
-
 
 .asset {
     position: absolute;
-
 }
 
-.medium {
-    width: 90px;
-    height: 90px;
-}
-
-.large {
-    width: 188px;
-    height: 188px;
+.token-image {
+    height: inherit;
+    width: inherit;
 }
 
 .hostile {
@@ -64,5 +43,18 @@ display: grid;
 }
 
 .is-draggable {
+    z-index: 100;
+    cursor: grab;
+    opacity: 80%;
+    &:hover {
+        opacity: 100%;
+    }
+}
+
+#token-menu {
+    width: 168px;
+    height: 200px;
+    border: 1px solid red;
+    position: absolute;
     z-index: 1000;
 }
